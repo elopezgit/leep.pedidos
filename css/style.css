@@ -26,7 +26,15 @@ h1,h2{margin:.5rem 0 1rem}
   padding:1rem;border-bottom:1px solid #1f2636;
   background:rgba(11,14,19,.8);backdrop-filter:blur(8px)
 }
-.logo{height:180px;filter:drop-shadow(0 8px 22px rgba(98,210,162,.22))}
+.logo {
+  height: 180px;
+  width: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 4px; /* espacio para el borde */
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
 
 /* Botonera de categorías */
 .cat-buttons{
