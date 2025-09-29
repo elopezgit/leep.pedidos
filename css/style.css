@@ -1,0 +1,123 @@
+:root{
+  --bg:#0b0e13; --bg2:#121723;
+  --card:#171d2b; --line:#26314a;
+  --ink:#e8ecf1; --muted:#a7b0c0;
+  --primary:#62d2a2; --primary-ink:#0b2a21;
+  --ring:#5aaee6; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+/* Reset básico */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  color:var(--ink);
+}
+
+.container{width:min(1100px,100%);margin-inline:auto;padding:1rem}
+h1,h2{margin:.5rem 0 1rem}
+.muted{color:var(--muted)}
+.sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+
+/* Banner */
+.banner{
+  display:flex;justify-content:center;align-items:center;
+  padding:1rem;border-bottom:1px solid #1f2636;
+  background:rgba(11,14,19,.8);backdrop-filter:blur(8px)
+}
+.logo{height:180px;filter:drop-shadow(0 8px 22px rgba(98,210,162,.22))}
+
+/* Botonera de categorías */
+.cat-buttons{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:.75rem;margin-bottom:1rem
+}
+.cat-btn{
+  padding:.8rem 1rem;border-radius:12px;border:1px solid var(--line);
+  background:#141a28;color:var(--ink);cursor:pointer;text-align:center
+}
+.cat-btn:hover,.cat-btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+
+/* Panel dinámico */
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1rem;box-shadow:var(--shadow);overflow:visible
+}
+
+/* GRID de colores (swatches) */
+.colors{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(60px,1fr));
+  gap:.9rem 1rem;
+  margin-bottom:1rem;
+}
+
+/* Botón de color (estructura vertical: círculo + etiqueta) */
+.color{
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;
+  background:transparent;border:none;cursor:pointer;padding:0;
+}
+.color:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+
+.color .dot{
+  width:56px;height:56px;border-radius:999px;
+  border:2px solid rgba(255,255,255,.65);box-sizing:border-box;
+}
+.color[data-selected="true"] .dot{
+  outline:3px solid var(--primary);outline-offset:2px;
+}
+.color span{
+  font-size:.72rem;color:var(--muted);line-height:1;pointer-events:none;
+}
+
+/* Cantidad + botón */
+.qty-row{
+  display:flex;gap:.5rem;align-items:center;margin-top:1rem
+}
+.qty-row input{
+  width:90px;padding:.55rem;border-radius:10px;border:1px solid var(--line);
+  background:#0e1422;color:var(--ink);text-align:center
+}
+
+/* Botones genéricos */
+.btn{
+  background:#15202f;border:1px solid var(--line);color:var(--ink);
+  border-radius:12px;padding:.6rem .9rem;cursor:pointer
+}
+.btn:hover{border-color:var(--ring)}
+.btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.btn-primary{
+  background:linear-gradient(180deg,var(--primary),#7ae2b6);
+  color:var(--primary-ink);border:none;font-weight:800
+}
+.btn-ghost{background:#0e1422}
+
+/* Resumen */
+.resume{margin-top:1.25rem}
+#resumeText{
+  width:100%;min-height:220px;padding:1rem;border-radius:12px;
+  border:1px solid var(--line);background:#0f1420;color:var(--ink);resize:vertical
+}
+.user-form .row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+.user-form label{flex:1 1 240px;display:grid;gap:.35rem}
+.user-form input{
+  padding:.6rem;border-radius:10px;border:1px solid var(--line);
+  background:#0e1422;color:var(--ink)
+}
+
+/* Footer */
+.footer{padding:1.5rem;text-align:center;color:var(--muted)}
+.footer a{color:var(--ink);opacity:.8}
+.footer a:hover{opacity:1}
+
+/* Badge de cantidad sobre el círculo */
+.color .dot{ position: relative; }
+.qty-badge{
+  position:absolute; top:-6px; right:-6px;
+  min-width:20px; height:20px; padding:0 4px;
+  display:grid; place-items:center;
+  border-radius:999px; font-size:.7rem; font-weight:800;
+  background:var(--primary); color:var(--primary-ink);
+  border:1px solid rgba(0,0,0,.25);
+}
