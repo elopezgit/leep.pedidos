@@ -1,9 +1,32 @@
+/* =======================
+   Tema claro LEEP Import
+   Paleta (aprox logo):
+   - Celeste: #00B5E2
+   - Magenta: #C2185B
+   - Violeta: #7E57C2
+   - Gris tinta: #233041
+   ======================= */
+
 :root{
-  --bg:#0b0e13; --bg2:#121723;
-  --card:#171d2b; --line:#26314a;
-  --ink:#e8ecf1; --muted:#a7b0c0;
-  --primary:#62d2a2; --primary-ink:#0b2a21;
-  --ring:#5aaee6; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+  /* Superficie clara */
+  --bg:#f6f8fc;        /* fondo general */
+  --bg2:#ffffff;       /* cartas/panel */
+  --line:#e2e8f0;      /* bordes claros */
+
+  /* Tintas */
+  --ink:#233041;       /* texto principal (alto contraste) */
+  --muted:#627084;     /* texto secundario */
+
+  /* Marca (logo) */
+  --primary:#00B5E2;       /* celeste */
+  --primary-ink:#08252b;   /* tinta sobre celeste */
+  --accent:#C2185B;        /* magenta */
+  --accent-2:#7E57C2;      /* violeta para toques */
+
+  /* UI */
+  --ring:#7E57C2;     /* focus */
+  --radius:14px;
+  --shadow:0 14px 40px rgba(20,42,71,.12);
 }
 
 /* Reset básico */
@@ -11,11 +34,26 @@
 html,body{margin:0;padding:0}
 body{
   font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
   color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgba(126,87,194,.10), transparent 60%),
+    radial-gradient(1000px 700px at -10% 100%, rgba(0,181,226,.12), transparent 60%),
+    linear-gradient(180deg, #fafcff 0%, var(--bg) 100%);
+  min-height:100dvh;
 }
 
-.container{width:min(1100px,100%);margin-inline:auto;padding:1rem}
+/* capa decorativa tipo “marca de agua” como en el PDF */
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background:
+    conic-gradient(from 220deg at 85% 15%, rgba(194,24,91,.12), transparent 35%),
+    conic-gradient(from 10deg at 10% 80%, rgba(0,181,226,.10), transparent 40%);
+  mix-blend-mode:multiply;
+}
+
+/* Contenedor y headings */
+.container{width:min(1100px,100%);margin-inline:auto;padding:1.25rem}
 h1,h2{margin:.5rem 0 1rem}
 .muted{color:var(--muted)}
 .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
@@ -23,111 +61,125 @@ h1,h2{margin:.5rem 0 1rem}
 /* Banner */
 .banner{
   display:flex;justify-content:center;align-items:center;
-  padding:1rem;border-bottom:1px solid #1f2636;
-  background:rgba(11,14,19,.8);backdrop-filter:blur(8px)
+  padding:1rem;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, #ffffffaa, #ffffff66);
+  backdrop-filter: blur(8px) saturate(1.1);
 }
-/* Avatar redondo estilo IG (si usás logo.png cuadrado) */
 .logo{
-  height:180px;width:180px;border-radius:50%;
+  height:160px;width:160px;border-radius:50%;
   object-fit:cover;padding:4px;
-  background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-  box-shadow:0 8px 22px rgba(98,210,162,.22)
+  background:conic-gradient(from 210deg, #00B5E2, #7E57C2, #C2185B, #00B5E2);
+  box-shadow:0 10px 28px rgba(126,87,194,.18)
 }
 
 /* Botonera de categorías */
 .cat-buttons{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:.75rem;margin-bottom:1rem
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:.85rem;margin-bottom:1.1rem
 }
 .cat-btn{
-  padding:.8rem 1rem;border-radius:12px;border:1px solid var(--line);
-  background:#141a28;color:var(--ink);cursor:pointer;text-align:center
+  padding:.9rem 1.1rem;border-radius:12px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--ink);cursor:pointer;text-align:center;
+  box-shadow: var(--shadow);
+  transition: transform .06s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.cat-btn:hover,.cat-btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.cat-btn:hover{transform: translateY(-1px); border-color:#d4deea}
+.cat-btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 
 /* Panel dinámico */
 .panel{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);
   padding:1rem;box-shadow:var(--shadow);overflow:visible
 }
 
-/* GRID de colores (swatches) */
+/* GRID de variantes (swatches) */
 .colors{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(60px,1fr));
-  gap:.9rem 1rem;
+  grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
+  gap:1rem .9rem;
   margin-bottom:1rem;
 }
-
-/* Botón de color (estructura vertical: círculo + etiqueta) */
 .color{
-  display:flex;flex-direction:column;align-items:center;gap:.35rem;
-  background:transparent;border:none;cursor:pointer;padding:0;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  background:transparent;border:none;cursor:pointer;padding:0; position:relative;
 }
-.color:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-
+.color:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 .color .dot{
-  width:56px;height:56px;border-radius:999px;
-  border:2px solid rgba(255,255,255,.65);box-sizing:border-box;
+  width:58px;height:58px;border-radius:999px;
+  /* borde dual para verse sobre claro */
+  background-clip: padding-box;
+  border:2px solid #ffffff; box-shadow:0 0 0 2px rgba(0,0,0,.06), inset 0 1px 2px rgba(0,0,0,.08);
 }
 .color[data-selected="true"] .dot{
-  outline:3px solid var(--primary);outline-offset:2px;
+  outline:3px solid color-mix(in oklab, var(--primary) 70%, white);
+  outline-offset:2px;
 }
 .color span{
-  font-size:.72rem;color:var(--muted);line-height:1;pointer-events:none;
+  font-size:.74rem;color:var(--muted);line-height:1.05;pointer-events:none;text-align:center;
+}
+
+/* Badge de cantidad */
+.qty-badge{
+  position:absolute; top:-6px; right:-6px;
+  min-width:20px; height:20px; padding:0 6px;
+  border-radius:999px; font-size:12px; font-style:normal;
+  display:grid; place-items:center; font-weight:800;
+  background:linear-gradient(180deg, var(--primary), #4fd6f0);
+  color:var(--primary-ink);
+  box-shadow:0 3px 10px rgba(0,181,226,.35);
 }
 
 /* Cantidad + botón */
 .qty-row{
-  display:flex;gap:.5rem;align-items:center;margin-top:1rem
+  display:flex;gap:.6rem;align-items:center;margin-top:1rem
 }
-/* 👇 FIX clave para evitar zoom en móviles: mínimo 16px */
 .qty-row input{
   font-size:16px;
-  width:90px;padding:.55rem;border-radius:10px;border:1px solid var(--line);
-  background:#0e1422;color:var(--ink);text-align:center
+  width:100px;padding:.6rem;border-radius:10px;border:1px solid var(--line);
+  background:#f9fbff;color:var(--ink);text-align:center;
+  box-shadow: inset 0 1px 2px rgba(26,43,70,.06);
 }
 
 /* Botones genéricos */
 .btn{
-  background:#15202f;border:1px solid var(--line);color:var(--ink);
-  border-radius:12px;padding:.6rem .9rem;cursor:pointer
+  background:#ffffff;border:1px solid var(--line);color:var(--ink);
+  border-radius:12px;padding:.7rem 1rem;cursor:pointer;
+  box-shadow: var(--shadow);
 }
-.btn:hover{border-color:var(--ring)}
-.btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.btn:hover{border-color:#d4deea}
+.btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 .btn-primary{
-  background:linear-gradient(180deg,var(--primary),#7ae2b6);
+  background:linear-gradient(180deg, var(--primary), #5fe1f4);
   color:var(--primary-ink);border:none;font-weight:800
 }
-.btn-ghost{background:#0e1422}
+.btn-ghost{background:#f3f7fd}
 
 /* Resumen */
 .resume{margin-top:1.25rem}
 #resumeText{
   width:100%;min-height:220px;padding:1rem;border-radius:12px;
-  border:1px solid var(--line);background:#0f1420;color:var(--ink);resize:vertical
+  border:1px solid var(--line);background:#ffffff;color:var(--ink);resize:vertical;
+  box-shadow: var(--shadow);
 }
-.user-form .row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
-.user-form label{flex:1 1 240px;display:grid;gap:.35rem}
-/* 👇 también 16px para inputs del formulario (evita zoom si el user enfoca ahí) */
+.user-form .row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.7rem}
+.user-form label{flex:1 1 240px;display:grid;gap:.4rem}
 .user-form input{
   font-size:16px;
-  padding:.6rem;border-radius:10px;border:1px solid var(--line);
-  background:#0e1422;color:var(--ink)
+  padding:.7rem;border-radius:10px;border:1px solid var(--line);
+  background:#f9fbff;color:var(--ink);
+  box-shadow: inset 0 1px 2px rgba(26,43,70,.06);
 }
 
 /* Footer */
 .footer{padding:1.5rem;text-align:center;color:var(--muted)}
-.footer a{color:var(--ink);opacity:.8}
-.footer a:hover{opacity:1}
 
-/* -------------------- Mobile tweaks -------------------- */
+/* Mobile */
 @media (max-width: 480px){
-  .container{padding:.9rem}
+  .container{padding:1rem}
   .logo{height:140px;width:140px}
-  .cat-buttons{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem}
-  .color .dot{width:52px;height:52px}
-  .color span{font-size:.7rem}
+  .cat-buttons{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.7rem}
+  .color .dot{width:54px;height:54px}
+  .color span{font-size:.72rem}
   .qty-row{gap:.6rem}
-  .btn{padding:.65rem .95rem}
+  .btn{padding:.7rem 1rem}
 }

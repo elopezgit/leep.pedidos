@@ -39,22 +39,6 @@ function createOrUpdateBadge(container, qty){
   if (!badge) {
     badge = document.createElement("em");
     badge.className = "qty-badge";
-    // estilo mínimo inline para asegurar visibilidad sin tocar CSS global
-    badge.style.position = "absolute";
-    badge.style.top = "-6px";
-    badge.style.right = "-6px";
-    badge.style.minWidth = "20px";
-    badge.style.height = "20px";
-    badge.style.padding = "0 6px";
-    badge.style.borderRadius = "999px";
-    badge.style.fontSize = "12px";
-    badge.style.fontStyle = "normal";
-    badge.style.display = "grid";
-    badge.style.placeItems = "center";
-    badge.style.background = "#62d2a2";
-    badge.style.color = "#0b2a21";
-    badge.style.fontWeight = "800";
-    badge.style.boxShadow = "0 2px 8px rgba(0,0,0,.35)";
     // anclar sobre el dot
     const dot = container.querySelector(".dot");
     dot.style.position = "relative";
@@ -100,7 +84,7 @@ function renderColorsFromButton(btn){
   grid.innerHTML = "";
 
   colors.forEach(c=>{
-    // Botón contenedor (coincide con CSS nuevo)
+    // Botón contenedor
     const node = document.createElement("button");
     node.className = "color";
     node.type = "button";
@@ -110,7 +94,7 @@ function renderColorsFromButton(btn){
     // Círculo de color
     const dot = document.createElement("div");
     dot.className = "dot";
-    dot.style.background = c.hex;
+    dot.style.background = c.hex || "#d0d6e0";
 
     // Etiqueta debajo
     const tag = document.createElement("span");
@@ -145,7 +129,7 @@ function renderColorsFromButton(btn){
     grid.appendChild(node);
   });
 
-  // Mostrar especificaciones de la categoría si ya existen
+  // Mostrar especificaciones generales, si existen
   const parts = [];
   if (measure) parts.push(`Medida: ${measure}`);
   if (espesor) parts.push(`Espesor: ${espesor}`);
@@ -154,7 +138,7 @@ function renderColorsFromButton(btn){
 
   // Reset de la UI del panel
   $("#btnAdd").disabled = true;
-  $("#hint").textContent = `Categoría: ${catName}${meta}. Elegí un color.`;
+  $("#hint").textContent = `Categoría: ${catName}${meta}. Elegí un color/variante.`;
   $("#qty").value = 1;
 
   // Inicializar badges con cantidades ya guardadas (si el usuario vuelve a esta categoría)
@@ -207,7 +191,7 @@ function rebuildResume(){
 
   cats.forEach(({name, items})=>{
     lines.push(`- ${name}`);
-    // Ordenar ítems por nombre de color
+    // Ordenar ítems por nombre (variante)
     const itemPairs = Object.entries(items).sort((a,b)=> a[0].localeCompare(b[0]));
     itemPairs.forEach(([colorName, qty])=>{
       total += Number(qty||0);

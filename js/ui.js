@@ -1,118 +1,125 @@
-// ui.js
-(function (global) {
-
-  function el(html) {
-    const t = document.createElement("template");
-    t.innerHTML = html.trim();
-    return t.content.firstElementChild;
+const UI = (() => {
+  function el(tag, attrs = {}, ...children){
+    const $e = document.createElement(tag);
+    Object.entries(attrs).forEach(([k,v])=>{
+      if (v==null) return;
+      if (k === "class") $e.className = v;
+      else if (k === "style") Object.assign($e.style, v);
+      else if (k.startsWith("on") && typeof v === "function") $e.addEventListener(k.slice(2), v);
+      else $e.setAttribute(k, v);
+    });
+    children.flat().filter(Boolean).forEach(ch=>{
+      $e.append(ch.nodeType ? ch : document.createTextNode(ch));
+    });
+    return $e;
   }
 
-  function renderCategories(root, catalog, onQtyChange) {
-    root.innerHTML = "";
-    catalog.categories.forEach(cat => {
-      const meta = [
-        cat.meta?.medida ? `Medida: ${cat.meta.medida}` : null,
-        cat.meta?.espesor ? `Espesor: ${cat.meta.espesor}` : null,
-        cat.meta?.pack ? `Pack: ${cat.meta.pack}` : null
-      ].filter(Boolean).join(" · ");
+  function swatch({ display, hex, qty, onInc, onDec }){
+    const $s = el("button", { class:"swatch", type:"button", "aria-label":`Agregar ${display}` },
+      el("span", { class:"dot", style:{ background: hex }}),
+      el("span", { class:"name" }, display)
+    );
+    const renderBadge = () => {
+      const old = $s.querySelector(".qty-badge"); if (old) old.remove();
+      if (qty() > 0){
+        $s.append(el("em", { class:"qty-badge" }, String(qty())));
+      }
+    };
+    $s.addEventListener("click", ()=>{ onInc(); renderBadge(); });
+    $s.addEventListener("contextmenu", (e)=>{ e.preventDefault(); onDec(); renderBadge(); });
+    renderBadge();
+    return $s;
+  }
 
-      const card = el(`
-        <article class="card" data-cat="${cat.id}">
-          <header>
-            <h3>${cat.name}</h3>
-            <p class="meta">${meta}</p>
-            <button class="btn btn-ghost btn-toggle">Ver productos</button>
-          </header>
-          <div class="items"></div>
-        </article>
-      `);
-      const itemsBox = card.querySelector(".items");
+  function productCard({ category, spec, product, cart }){
+    const $card = el("article", { class:"card" });
+    const $hd = el("div", { class:"card-hd" },
+      el("h3", { class:"title" }, `${product.name}`),
+      el("div", { class:"meta" },
+        spec.medida ? el("span",{}, `Medida ${spec.medida}`) : null,
+        spec.espesor ? el("span",{}, `Espesor ${spec.espesor}`) : null,
+        spec.pack ? el("span",{}, spec.pack) : null,
+        el("span",{}, `Categoría: ${category}`)
+      )
+    );
 
-      cat.items.forEach(item => {
-        const row = el(`
-          <div class="item" data-item="${item.id}">
-            <div>
-              <strong>${item.name}</strong>
-            </div>
-            <div class="qty">
-              <input type="number" inputmode="numeric" min="0" step="1" value="0" aria-label="Cantidad ${item.name}">
-              <button class="btn btn-primary btn-add">Agregar</button>
-            </div>
-          </div>
-        `);
-        // Eventos
-        row.querySelector(".btn-add").addEventListener("click", () => {
-          const qty = Number(row.querySelector("input").value || 0);
-          onQtyChange(cat, item, qty, /*replace*/ true);
-        });
-        itemsBox.appendChild(row);
+    const $sw = el("div", { class:"swatches" });
+    product.variants.forEach(v => {
+      const item = {
+        code: v.code,
+        name: product.name,
+        category,
+        spec,
+        variantName: v.name,
+        hex: v.hex
+      };
+      $sw.append(swatch({
+        display: v.name,
+        hex: v.hex,
+        qty: () => cart.get(`${v.code}__${v.name}`)?.qty || 0,
+        onInc: () => cart.add(item, +1),
+        onDec: () => cart.add(item, -1),
+      }));
+    });
+
+    const $actions = el("div", { class:"actions" },
+      el("button", { class:"btn btn-ghost", type:"button", onClick:()=>alert("Tip: clic suma, clic derecho resta 😊") }, "¿Cómo uso los swatches?")
+    );
+
+    $card.append($hd, $sw, $actions);
+    return $card;
+  }
+
+  function renderCatalog($root, data, cart){
+    $root.innerHTML = "";
+    data.forEach(block => {
+      // Agrupar items por "producto" (misma name, múltiples variantes)
+      const grouped = {};
+      block.items.forEach(it=>{
+        const key = `${block.category}__${it.name}`;
+        (grouped[key] ||= { name: it.name, variants: [], base: it });
+        grouped[key].variants.push({ code: it.code, name: it.variant.name, hex: it.variant.hex });
       });
 
-      // Toggle
-      card.querySelector(".btn-toggle").addEventListener("click", () => {
-        card.classList.toggle("open");
+      Object.values(grouped).forEach(prod=>{
+        $root.append(productCard({
+          category: block.category,
+          spec: block.spec,
+          product: prod,
+          cart
+        }));
       });
-
-      root.appendChild(card);
     });
   }
 
-  function renderCart(container, summary, handlers) {
-    container.innerHTML = "";
+  function renderCart($list, $count, cart){
+    const { items, totalQty } = cart.summary();
+    $list.innerHTML = "";
+    $count.textContent = String(totalQty);
 
-    if (!summary.groups.length) {
-      container.appendChild(el(`<p class="muted">Aún no agregaste productos.</p>`));
+    if (!items.length){
+      $list.append(el("div", { class:"cap" }, "Tu consulta está vacía. Agregá productos haciendo clic en los colores."));
       return;
     }
 
-    summary.groups.forEach(g => {
-      const grp = el(`<div class="group"><h4>${g.name}</h4></div>`);
-      g.items.forEach(it => {
-        const line = el(`
-          <div class="line" data-cat="${g.categoryId}" data-item="${it.itemId}">
-            <button class="btn btn-ghost btn-del" title="Eliminar">🗑</button>
-            <div class="name">${it.name}</div>
-            <div class="qty">
-              <input type="number" min="0" step="1" value="${it.qty}" inputmode="numeric" aria-label="Cantidad ${it.name}">
-            </div>
-          </div>
-        `);
-        // Eliminar
-        line.querySelector(".btn-del").addEventListener("click", () => {
-          handlers.onDelete(g.categoryId, it.itemId);
-        });
-        // Cambiar qty
-        line.querySelector("input").addEventListener("change", (e) => {
-          const v = Number(e.target.value || 0);
-          handlers.onUpdate(g.categoryId, g.name, it.itemId, it.name, v);
-        });
-
-        grp.appendChild(line);
-      });
-      container.appendChild(grp);
+    items.forEach(row=>{
+      const id = `${row.code}__${row.variantName}`;
+      const $r = el("div", { class:"cart-row" },
+        el("div", {},
+          el("div", {}, `${row.name} – ${row.variantName}`),
+          el("div", { class:"cap" },
+            `${row.code} • ${row.spec?.medida || ""}${row.spec?.medida && (row.spec?.espesor||row.spec?.pack) ? " • " : ""}${row.spec?.espesor || ""}${row.spec?.espesor && row.spec?.pack ? " • " : ""}${row.spec?.pack || ""}`
+          )
+        ),
+        el("div", { class:"qty-controls" },
+          el("button", { type:"button", onClick:()=>cart.add(row, -1) }, "−"),
+          el("span", {}, String(row.qty)),
+          el("button", { type:"button", onClick:()=>cart.add(row, +1) }, "+")
+        )
+      );
+      $list.append($r);
     });
   }
 
-  function setBagCount(n) {
-    document.getElementById("bag-count").textContent = n;
-    document.getElementById("total-items").textContent = n;
-  }
-
-  function openDrawer() { document.getElementById("drawer").classList.add("open"); document.getElementById("drawer").setAttribute("aria-hidden","false"); }
-  function closeDrawer() { document.getElementById("drawer").classList.remove("open"); document.getElementById("drawer").setAttribute("aria-hidden","true"); }
-
-  function openNav() {
-    const nav = document.getElementById("main-nav");
-    nav.classList.add("open");
-    nav.setAttribute("aria-hidden","false");
-    document.getElementById("btn-menu").setAttribute("aria-expanded","true");
-  }
-  function closeNav() {
-    const nav = document.getElementById("main-nav");
-    nav.classList.remove("open");
-    nav.setAttribute("aria-hidden","true");
-    document.getElementById("btn-menu").setAttribute("aria-expanded","false");
-  }
-
-  global.UI = { el, renderCategories, renderCart, setBagCount, openDrawer, closeDrawer, openNav, closeNav };
-})(window);
+  return { renderCatalog, renderCart };
+})();

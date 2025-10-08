@@ -1,45 +1,40 @@
-// waBuilder.js
-(function (global) {
-  const WHATSAPP_NUMBER = "5493815542592";
+// Número centralizado (formato internacional sin +, ejemplo Argentina 54)
+const WHATSAPP_NUMBER = "5493815542592";
 
-  function pad2(n){ return String(n).padStart(2,"0"); }
-  function formatDate(d){
-    const dd = pad2(d.getDate());
-    const mm = pad2(d.getMonth()+1);
-    const yyyy = d.getFullYear();
-    const hh = pad2(d.getHours());
-    const mi = pad2(d.getMinutes());
-    return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+const WABuilder = (() => {
+  function buildMessage({ name, email, notes, items }){
+    const head = [
+      `*CONSULTA DE PEDIDO*`,
+      `Nombre: ${name}`,
+      `Correo: ${email || "-"}`,
+      notes ? `Observaciones: ${notes}` : null,
+      ``
+    ].filter(Boolean).join("\n");
+
+    const body = items.map((it, idx) => {
+      const spec = [];
+      if (it.spec?.medida) spec.push(`Medida ${it.spec.medida}`);
+      if (it.spec?.espesor) spec.push(`Espesor ${it.spec.espesor}`);
+      if (it.spec?.pack) spec.push(it.spec.pack);
+
+      return [
+        `*${idx+1}.* ${it.name} – ${it.variantName}`,
+        `Código: ${it.code}`,
+        spec.length ? spec.join(" • ") : null,
+        `Cantidad: ${it.qty}`,
+        ``
+      ].filter(Boolean).join("\n");
+    }).join("");
+
+    const footer = `Total de ítems: ${items.reduce((a,b)=>a+b.qty,0)}`;
+
+    return `${head}${body}${footer}`;
   }
 
-  function buildMessage(cartSummary, form) {
-    const lines = [];
-    lines.push(`*Consulta de presupuesto* 🧾`);
-    lines.push(`Solicitante: ${form.nombre || "-"} | Email: ${form.correo || "-"}`);
-    lines.push(`Fecha: ${formatDate(new Date())}`);
-    lines.push("");
-    lines.push(`*Forma de envío:* ${form.envio || "-"}`);
-    lines.push(`*Forma de pago:* ${form.pago || "-"}`);
-    lines.push("");
-    lines.push(`*Pedido detallado (por categoría):*`);
-
-    cartSummary.groups.forEach(g => {
-      lines.push(`- ${g.name}`);
-      g.items.forEach(it => lines.push(`  • ${it.name}: ${it.qty} u.`));
-      lines.push("");
-    });
-
-    lines.push(`*Total de ítems:* ${cartSummary.totalQty}`);
-    lines.push("");
-    lines.push(`Gracias. Quedo atento/a a su respuesta.`);
-
-    return lines.join("\n");
-  }
-
-  function openWhatsApp(message) {
+  function openWhatsApp(message){
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener");
   }
 
-  global.WABuilder = { buildMessage, openWhatsApp };
-})(window);
+  return { buildMessage, openWhatsApp };
+})();
