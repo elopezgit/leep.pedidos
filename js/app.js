@@ -1,10 +1,10 @@
 // Número de WhatsApp del vendedor
 const WHATSAPP_NUMBER = "5493815542592";
 
-// Estado: guardamos por catId -> { name, items: { [colorName]: qty } }
+// Estado: cart[catId] = { name, spec: { measure, espesor, pack }, items: { "Variante": qty } }
 const state = {
   current: { catId: null, catName: "", colorHex: null, colorName: null, measure: "", espesor: "", pack: "" },
-  cart: {} // cart[catId] = { name: "Goma EVA Lisa", items: { "Blanco": 10, "Azul": 5 } }
+  cart: {}
 };
 
 const $  = (sel, ctx=document) => ctx.querySelector(sel);
@@ -15,15 +15,20 @@ const pad2 = n => String(n).padStart(2,"0");
 const fmtDate = d => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 
 // Helpers de carrito (set / get / delete)
-function ensureCat(catId, catName){
-  if (!state.cart[catId]) state.cart[catId] = { name: catName, items: {} };
+function ensureCat(catId, catName, measure="", espesor="", pack=""){
+  if (!state.cart[catId]) {
+    state.cart[catId] = { name: catName, spec: { measure, espesor, pack }, items: {} };
+  } else {
+    state.cart[catId].name = catName;
+    state.cart[catId].spec = { measure, espesor, pack };
+  }
   return state.cart[catId];
 }
 function getQty(catId, colorName){
   return state.cart[catId]?.items?.[colorName] ?? 0;
 }
-function setQty(catId, catName, colorName, qty){
-  const cat = ensureCat(catId, catName);
+function setQty(catId, catName, colorName, qty, measure="", espesor="", pack=""){
+  const cat = ensureCat(catId, catName, measure, espesor, pack);
   if (qty <= 0) {
     delete cat.items[colorName];
     if (Object.keys(cat.items).length === 0) delete state.cart[catId];
@@ -34,12 +39,10 @@ function setQty(catId, catName, colorName, qty){
 
 // ---------- Badges en los swatches ----------
 function createOrUpdateBadge(container, qty){
-  // container es el botón .color; el círculo es .dot
   let badge = container.querySelector(".qty-badge");
   if (!badge) {
     badge = document.createElement("em");
     badge.className = "qty-badge";
-    // anclar sobre el dot
     const dot = container.querySelector(".dot");
     dot.style.position = "relative";
     dot.appendChild(badge);
@@ -54,12 +57,10 @@ function createOrUpdateBadge(container, qty){
 }
 
 function updateColorBadges(catId){
-  // Revisa todos los .color visibles (grid actual) y actualiza su badge con la qty guardada
   $$("#colorsGrid .color").forEach(node=>{
     const colorName = node.querySelector("span")?.textContent?.trim() || "";
     const qty = getQty(catId, colorName);
     createOrUpdateBadge(node, qty);
-    // si hay qty, marcamos seleccionado “suave”
     node.dataset.selected = qty > 0 ? "true" : node.dataset.selected;
   });
 }
@@ -68,7 +69,8 @@ function updateColorBadges(catId){
 function renderColorsFromButton(btn){
   const catId   = btn.dataset.catId;
   const catName = btn.dataset.catName;
-  const measure = btn.dataset.measure || "";
+  // ✅ FIX: leer data-medida como dataset.medida
+  const measure = btn.dataset.medida || "";
   const espesor = btn.dataset.espesor || "";
   const pack    = btn.dataset.pack || "";
 
@@ -84,44 +86,37 @@ function renderColorsFromButton(btn){
   grid.innerHTML = "";
 
   colors.forEach(c=>{
-    // Botón contenedor
     const node = document.createElement("button");
     node.className = "color";
     node.type = "button";
     node.setAttribute("aria-label", `${catName} - ${c.name}`);
     node.dataset.selected = "false";
 
-    // Círculo de color
     const dot = document.createElement("div");
     dot.className = "dot";
     dot.style.background = c.hex || "#d0d6e0";
 
-    // Etiqueta debajo
     const tag = document.createElement("span");
     tag.textContent = c.name;
 
     node.append(dot, tag);
 
     node.addEventListener("click", ()=>{
-      // Deselecciona los demás
       $$(".color").forEach(n=>n.dataset.selected="false");
       node.dataset.selected = "true";
 
-      // Estado actual
       state.current.colorHex = c.hex;
       state.current.colorName = c.name;
 
-      // Prefill con lo guardado
       const prev = getQty(catId, c.name);
       $("#qty").value = Math.max(1, Number(prev || 1));
 
       $("#btnAdd").disabled = false;
 
-      // Hint con especificaciones
       const parts = [];
       if (measure) parts.push(`Medida: ${measure}`);
       if (espesor) parts.push(`Espesor: ${espesor}`);
-      if (pack)    parts.push(`Pack: ${pack}`);
+      if (pack)    parts.push(pack);
       const meta = parts.length ? ` (${parts.join(" · ")})` : "";
       $("#hint").textContent = `Seleccionado: ${catName}${meta} / ${c.name}. Modificá la cantidad y presioná “Agregar”.`;
     });
@@ -129,37 +124,32 @@ function renderColorsFromButton(btn){
     grid.appendChild(node);
   });
 
-  // Mostrar especificaciones generales, si existen
   const parts = [];
   if (measure) parts.push(`Medida: ${measure}`);
   if (espesor) parts.push(`Espesor: ${espesor}`);
-  if (pack)    parts.push(`Pack: ${pack}`);
+  if (pack)    parts.push(pack);
   const meta = parts.length ? ` (${parts.join(" · ")})` : "";
 
-  // Reset de la UI del panel
   $("#btnAdd").disabled = true;
   $("#hint").textContent = `Categoría: ${catName}${meta}. Elegí un color/variante.`;
   $("#qty").value = 1;
 
-  // Inicializar badges con cantidades ya guardadas (si el usuario vuelve a esta categoría)
   updateColorBadges(catId);
 }
 
 // Reemplaza la cantidad (no suma)
 function addCurrentToCart(){
-  const { catId, catName, colorName } = state.current;
+  const { catId, catName, colorName, measure, espesor, pack } = state.current;
   if (!catId || !colorName) return;
 
   const qty = Math.max(0, Number($("#qty").value || 0)); // 0 elimina
-  setQty(catId, catName, colorName, qty);
+  setQty(catId, catName, colorName, qty, measure, espesor, pack);
 
-  // Mantener seleccionado el color y dejar el input con el valor guardado
   const saved = getQty(catId, colorName);
   $("#qty").value = saved ? saved : 1;
 
   if (saved === 0) {
     $("#hint").textContent = `Se eliminó ${catName} / ${colorName} de la consulta.`;
-    // Quitar highlight visual si se borró
     $$("#colorsGrid .color").forEach(n=>{
       if (n.querySelector("span")?.textContent?.trim() === colorName) n.dataset.selected="false";
     });
@@ -168,14 +158,11 @@ function addCurrentToCart(){
     $("#hint").textContent = `Guardado: ${catName} / ${colorName} = ${saved} u.`;
   }
 
-  // Actualizar badges en los swatches
   updateColorBadges(catId);
-
-  // Reconstruir resumen
   rebuildResume();
 }
 
-// Construye el texto del presupuesto desde el estado
+// Construye el texto del presupuesto desde el estado (con Medida/Espesor/Pack)
 function rebuildResume(){
   const lines = [];
   lines.push("*Consulta de presupuesto* 🧾");
@@ -184,14 +171,20 @@ function rebuildResume(){
   lines.push("*Pedido detallado (por categoría):*");
 
   let total = 0;
-  // Ordenar por nombre de categoría
+
   const cats = Object.entries(state.cart)
-    .map(([catId, data]) => ({ catId, name: data.name, items: data.items }))
+    .map(([catId, data]) => ({ catId, name: data.name, items: data.items, spec: data.spec || {} }))
     .sort((a,b)=> a.name.localeCompare(b.name));
 
-  cats.forEach(({name, items})=>{
+  cats.forEach(({name, items, spec})=>{
     lines.push(`- ${name}`);
-    // Ordenar ítems por nombre (variante)
+
+    const specParts = [];
+    if (spec.measure) specParts.push(`Medida: ${spec.measure}`);
+    if (spec.espesor) specParts.push(`Espesor: ${spec.espesor}`);
+    if (spec.pack)    specParts.push(spec.pack);
+    if (specParts.length) lines.push(`  ${specParts.join(" • ")}`);
+
     const itemPairs = Object.entries(items).sort((a,b)=> a[0].localeCompare(b[0]));
     itemPairs.forEach(([colorName, qty])=>{
       total += Number(qty||0);
@@ -212,7 +205,7 @@ function rebuildResume(){
 // Enviar por WhatsApp
 function sendWhatsApp(){
   if (!Object.keys(state.cart).length){
-    alert("Tu consulta está vacía. Agregá al menos un producto."); 
+    alert("Tu consulta está vacía. Agregá al menos un producto.");
     return;
   }
   const name = ($("#inpName").value||"").trim();
@@ -234,11 +227,9 @@ function clearAll(){
   $("#inpName").value = "";
   $("#inpEmail").value = "";
   $("#hint").textContent = "Elegí una categoría y luego un color para comenzar.";
-  // Reset visual del panel
   $$("#colorsGrid .color").forEach(n=>n.dataset.selected="false");
   $("#qty").value = 1;
   $("#btnAdd").disabled = true;
-  // Borro badges visibles
   $$("#colorsGrid .color").forEach(n=>createOrUpdateBadge(n, 0));
 }
 
@@ -246,29 +237,24 @@ function clearAll(){
 document.addEventListener("DOMContentLoaded", ()=>{
   $("#year").textContent = new Date().getFullYear();
 
-  // Botones de categoría
   $$("#categoryButtons .cat-btn").forEach(btn=>{
     btn.addEventListener("click", ()=> renderColorsFromButton(btn));
   });
 
-  // Agregar (reemplaza)
   $("#btnAdd").addEventListener("click", addCurrentToCart);
 
-  // Si cambia cantidad y hay color seleccionado, guardamos al vuelo y refrescamos badge
   $("#qty").addEventListener("change", ()=>{
-    const { catId, catName, colorName } = state.current;
+    const { catId, catName, colorName, measure, espesor, pack } = state.current;
     if (catId && colorName){
       const q = Math.max(0, Number($("#qty").value||0));
-      setQty(catId, catName, colorName, q);
+      setQty(catId, catName, colorName, q, measure, espesor, pack);
       updateColorBadges(catId);
       rebuildResume();
     }
   });
 
-  // WhatsApp y Vaciar
   $("#btnWhatsApp").addEventListener("click", sendWhatsApp);
   $("#btnClear").addEventListener("click", clearAll);
 
-  // Hint inicial
   $("#hint").textContent = "Elegí una categoría para ver colores disponibles.";
 });

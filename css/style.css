@@ -1,35 +1,15 @@
 /* =======================
    Tema claro LEEP Import
-   Paleta (aprox logo):
-   - Celeste: #00B5E2
-   - Magenta: #C2185B
-   - Violeta: #7E57C2
-   - Gris tinta: #233041
    ======================= */
 
 :root{
-  /* Superficie clara */
-  --bg:#f6f8fc;        /* fondo general */
-  --bg2:#ffffff;       /* cartas/panel */
-  --line:#e2e8f0;      /* bordes claros */
-
-  /* Tintas */
-  --ink:#233041;       /* texto principal (alto contraste) */
-  --muted:#627084;     /* texto secundario */
-
-  /* Marca (logo) */
-  --primary:#00B5E2;       /* celeste */
-  --primary-ink:#08252b;   /* tinta sobre celeste */
-  --accent:#C2185B;        /* magenta */
-  --accent-2:#7E57C2;      /* violeta para toques */
-
-  /* UI */
-  --ring:#7E57C2;     /* focus */
-  --radius:14px;
-  --shadow:0 14px 40px rgba(20,42,71,.12);
+  --bg:#f6f8fc; --bg2:#ffffff; --line:#e2e8f0;
+  --ink:#233041; --muted:#627084;
+  --primary:#00B5E2; --primary-ink:#08252b;
+  --accent:#C2185B; --accent-2:#7E57C2;
+  --ring:#7E57C2; --radius:14px; --shadow:0 14px 40px rgba(20,42,71,.12);
 }
 
-/* Reset básico */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
@@ -41,18 +21,14 @@ body{
     linear-gradient(180deg, #fafcff 0%, var(--bg) 100%);
   min-height:100dvh;
 }
-
-/* capa decorativa tipo “marca de agua” como en el PDF */
 body::before{
-  content:"";
-  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
   background:
     conic-gradient(from 220deg at 85% 15%, rgba(194,24,91,.12), transparent 35%),
     conic-gradient(from 10deg at 10% 80%, rgba(0,181,226,.10), transparent 40%);
   mix-blend-mode:multiply;
 }
 
-/* Contenedor y headings */
 .container{width:min(1100px,100%);margin-inline:auto;padding:1.25rem}
 h1,h2{margin:.5rem 0 1rem}
 .muted{color:var(--muted)}
@@ -72,7 +48,7 @@ h1,h2{margin:.5rem 0 1rem}
   box-shadow:0 10px 28px rgba(126,87,194,.18)
 }
 
-/* Botonera de categorías */
+/* Botonera */
 .cat-buttons{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
   gap:.85rem;margin-bottom:1.1rem
@@ -86,89 +62,45 @@ h1,h2{margin:.5rem 0 1rem}
 .cat-btn:hover{transform: translateY(-1px); border-color:#d4deea}
 .cat-btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 
-/* Panel dinámico */
+/* Panel */
 .panel{
   background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);
   padding:1rem;box-shadow:var(--shadow);overflow:visible
 }
 
-/* GRID de variantes (swatches) */
-.colors{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
-  gap:1rem .9rem;
-  margin-bottom:1rem;
-}
-.color{
-  display:flex;flex-direction:column;align-items:center;gap:.4rem;
-  background:transparent;border:none;cursor:pointer;padding:0; position:relative;
-}
+/* Variantes */
+.colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:1rem .9rem;margin-bottom:1rem}
+.color{display:flex;flex-direction:column;align-items:center;gap:.4rem;background:transparent;border:none;cursor:pointer;padding:0; position:relative;}
 .color:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
-.color .dot{
-  width:58px;height:58px;border-radius:999px;
-  /* borde dual para verse sobre claro */
-  background-clip: padding-box;
-  border:2px solid #ffffff; box-shadow:0 0 0 2px rgba(0,0,0,.06), inset 0 1px 2px rgba(0,0,0,.08);
-}
-.color[data-selected="true"] .dot{
-  outline:3px solid color-mix(in oklab, var(--primary) 70%, white);
-  outline-offset:2px;
-}
-.color span{
-  font-size:.74rem;color:var(--muted);line-height:1.05;pointer-events:none;text-align:center;
-}
+.color .dot{width:58px;height:58px;border-radius:999px;background-clip: padding-box;border:2px solid #ffffff; box-shadow:0 0 0 2px rgba(0,0,0,.06), inset 0 1px 2px rgba(0,0,0,.08);}
+.color[data-selected="true"] .dot{outline:3px solid color-mix(in oklab, var(--primary) 70%, white);outline-offset:2px;}
+.color span{font-size:.74rem;color:var(--muted);line-height:1.05;pointer-events:none;text-align:center}
 
-/* Badge de cantidad */
+/* Badge */
 .qty-badge{
-  position:absolute; top:-6px; right:-6px;
-  min-width:20px; height:20px; padding:0 6px;
-  border-radius:999px; font-size:12px; font-style:normal;
-  display:grid; place-items:center; font-weight:800;
-  background:linear-gradient(180deg, var(--primary), #4fd6f0);
-  color:var(--primary-ink);
+  position:absolute; top:-6px; right:-6px; min-width:20px; height:20px; padding:0 6px;
+  border-radius:999px; font-size:12px; font-style:normal; display:grid; place-items:center; font-weight:800;
+  background:linear-gradient(180deg, var(--primary), #4fd6f0); color:var(--primary-ink);
   box-shadow:0 3px 10px rgba(0,181,226,.35);
 }
 
 /* Cantidad + botón */
-.qty-row{
-  display:flex;gap:.6rem;align-items:center;margin-top:1rem
-}
-.qty-row input{
-  font-size:16px;
-  width:100px;padding:.6rem;border-radius:10px;border:1px solid var(--line);
-  background:#f9fbff;color:var(--ink);text-align:center;
-  box-shadow: inset 0 1px 2px rgba(26,43,70,.06);
-}
+.qty-row{display:flex;gap:.6rem;align-items:center;margin-top:1rem}
+.qty-row input{font-size:16px;width:100px;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#f9fbff;color:var(--ink);text-align:center;box-shadow: inset 0 1px 2px rgba(26,43,70,.06)}
 
-/* Botones genéricos */
-.btn{
-  background:#ffffff;border:1px solid var(--line);color:var(--ink);
-  border-radius:12px;padding:.7rem 1rem;cursor:pointer;
-  box-shadow: var(--shadow);
-}
+/* Botones */
+.btn{background:#ffffff;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:.7rem 1rem;cursor:pointer;box-shadow: var(--shadow)}
 .btn:hover{border-color:#d4deea}
 .btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
-.btn-primary{
-  background:linear-gradient(180deg, var(--primary), #5fe1f4);
-  color:var(--primary-ink);border:none;font-weight:800
-}
+.btn-primary{background:linear-gradient(180deg, var(--primary), #5fe1f4);color:var(--primary-ink);border:none;font-weight:800}
 .btn-ghost{background:#f3f7fd}
 
 /* Resumen */
 .resume{margin-top:1.25rem}
-#resumeText{
-  width:100%;min-height:220px;padding:1rem;border-radius:12px;
-  border:1px solid var(--line);background:#ffffff;color:var(--ink);resize:vertical;
-  box-shadow: var(--shadow);
-}
+#resumeText{width:100%;min-height:220px;padding:1rem;border-radius:12px;border:1px solid var(--line);background:#ffffff;color:var(--ink);resize:vertical;box-shadow: var(--shadow)}
 .user-form .row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.7rem}
 .user-form label{flex:1 1 240px;display:grid;gap:.4rem}
-.user-form input{
-  font-size:16px;
-  padding:.7rem;border-radius:10px;border:1px solid var(--line);
-  background:#f9fbff;color:var(--ink);
-  box-shadow: inset 0 1px 2px rgba(26,43,70,.06);
-}
+.user-form input{font-size:16px;padding:.7rem;border-radius:10px;border:1px solid var(--line);background:#f9fbff;color:var(--ink);box-shadow: inset 0 1px 2px rgba(26,43,70,.06)}
 
 /* Footer */
 .footer{padding:1.5rem;text-align:center;color:var(--muted)}
