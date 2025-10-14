@@ -192,3 +192,22 @@ h1,h2{margin:.5rem 0 1rem}
 }
 
 /* (resto de tu CSS se mantiene igual) */
+/* Botón de categoría activo (seleccionado) */
+.cat-btn[aria-pressed="true"]{
+  border-color: var(--ring);
+  background: linear-gradient(180deg, #ffffff, #f4f7ff);
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--ring) 28%, transparent),
+    var(--shadow);
+  transform: translateY(0); /* neutraliza el pequeño lift del hover */
+}
+
+/* Opcional: una “píldora” inferior como indicador */
+.cat-btn[aria-pressed="true"]::after{
+  content:"";
+  display:block;
+  height:4px;
+  margin-top:.55rem;
+  border-radius:999px;
+  background: linear-gradient(90deg, var(--primary), var(--ring));
+}

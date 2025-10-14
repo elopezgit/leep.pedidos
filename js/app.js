@@ -245,14 +245,23 @@ function clearAll(){
   // Ocultar imagen
   const card  = $("#productCard");  const img  = $("#productImg");
   if (card && img){ card.style.display = "none"; img.removeAttribute("src"); img.alt=""; }
+
+  // Quitar estado activo de categorías
+  $$("#categoryButtons .cat-btn").forEach(b=> b.setAttribute("aria-pressed","false"));
 }
 
 // ---- Eventos
 document.addEventListener("DOMContentLoaded", ()=>{
   const year = $("#year"); if (year) year.textContent = new Date().getFullYear();
 
+  // Estado visual de categoría activa
   $$("#categoryButtons .cat-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=>renderColorsFromButton(btn));
+    btn.setAttribute("aria-pressed","false");
+    btn.addEventListener("click", ()=>{
+      $$("#categoryButtons .cat-btn").forEach(b=> b.setAttribute("aria-pressed","false"));
+      btn.setAttribute("aria-pressed","true");
+      renderColorsFromButton(btn);
+    });
   });
 
   const btnAdd = $("#btnAdd");
