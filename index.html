@@ -11,14 +11,13 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- Banner con logo -->
   <header class="banner">
     <img src="img/logo.png" alt="LEEP" class="logo">
   </header>
 
   <main class="container">
-    <h1>Categorías</h1>
-
+    <h1></h1>
+    <h3>Selccioná una Categoría</h3>
     <!-- Botonera de categorías -->
     <div id="categoryButtons" class="cat-buttons" role="tablist" aria-label="Categorías">
       <!-- ====== GOMA EVA ====== -->
@@ -28,6 +27,7 @@
         data-medida="40x60 cm"
         data-espesor="1,5 mm"
         data-pack="Pack x10u"
+        data-image="img/Goma-Eva-Lisa.jpg"
         data-colors="#FFD54F:Amarillo,#FB8C00:Naranja,#E53935:Rojo,#29B6F6:Celeste,#7CB342:Verde manzana,#43A047:Verde medio,#1B5E20:Verde oscuro,#F1C27D:Piel,#6D4C41:Marrón,#000000:Negro,#FFFFFF:Blanco,#1E88E5:Azul,#EC407A:Rosa,#C51162:Fucsia,#9575CD:Lila,#5E35B1:Violeta">
         Goma EVA Lisa
       </button>
@@ -38,6 +38,7 @@
         data-medida="40x60 cm"
         data-espesor="1,7 mm"
         data-pack="Pack x10u"
+        data-image="img/Goma-Eva-gliter.jpg"
         data-colors="#C0C0C0:Plata,#FFFFFF:Blanco,#000000:Negro,#7CB342:Verde manzana iridiscente,#43A047:Verde medio,#D4AF37:Dorado,#6D4C41:Marrón,#F7E7CE:Champagne,#1E88E5:Azul,#29B6F6:Celeste,#3EC6B2:Verde aguamarina iridiscente,#00ACC1:Turquesa,#1B5E20:Verde oscuro,#F06292:Rosa iridiscente,#7E57C2:Violeta,#B39DDB:Lila iridiscente,#9575CD:Lila,#C51162:Fucsia,#EC407A:Rosa,#E53935:Rojo,#FB8C00:Naranja,#FF7043:Naranja iridiscente,#FFD54F:Amarillo">
         Goma EVA Glitter
       </button>
@@ -48,6 +49,7 @@
         data-medida="40x60 cm"
         data-espesor="2 mm"
         data-pack="Pack x10u"
+        data-image="img/goma-eva-arcoiris.jpg"
         data-colors="#FFD700:Arcoíris">
         Goma EVA Arcoíris
       </button>
@@ -58,6 +60,7 @@
         data-medida="40x60 cm"
         data-espesor="2 mm"
         data-pack="Pack x10u"
+        data-image="img/goma-eva-toalla.jpg"
         data-colors="#FFD54F:Amarillo,#F1C27D:Piel,#FB8C00:Naranja,#1E88E5:Azul,#29B6F6:Celeste,#7CB342:Verde manzana,#1B5E20:Verde oscuro,#6D4C41:Marrón,#000000:Negro,#FFFFFF:Blanco,#7E57C2:Violeta,#EC407A:Rosa,#E53935:Rojo,#C51162:Fucsia,#9575CD:Lila">
         Goma EVA Toalla
       </button>
@@ -67,76 +70,86 @@
         data-cat-name="Papel Crepé"
         data-medida="50x200 cm"
         data-pack="Pack x10u"
+        data-image="img/papel-crepe.jpg"
         data-colors="#FFD54F:Amarillo,#7CB342:Verde manzana,#43A047:Verde medio,#FFFFFF:Blanco,#000000:Negro,#6D4C41:Marrón,#FB8C00:Naranja,#29B6F6:Celeste,#1E88E5:Azul,#7E57C2:Violeta,#1B5E20:Verde oscuro,#C51162:Fucsia,#EC407A:Rosa,#E53935:Rojo,#9575CD:Lila">
         Papel Crepé
       </button>
 
       <!-- ====== ADICIONALES ====== -->
 
-      <!-- Cinta de Papel (6 variantes) -->
       <button class="cat-btn"
         data-cat-id="cinta-de-papel"
         data-cat-name="Cinta de Papel"
         data-medida=""
         data-pack=""
-        data-colors="#FFE0B2:12 mm × 40 mts • Embalaje 144 rolls,
-#FFE0B2:18 mm × 20 mts • Embalaje 96 rolls,
-#FFE0B2:18 mm × 40 mts • Embalaje 96 rolls,
-#FFE0B2:24 mm × 40 mts • Embalaje 72 rolls,
-#FFE0B2:36 mm × 40 mts • Embalaje 48 rolls,
-#FFE0B2:48 mm × 40 mts • Embalaje 36 rolls">
-        Cinta de Papel
+        data-image="img/cinta-de-papel.png"
+        data-colors="{img}:12 mm × 40 mts • Embalaje 144 rolls,
+            {img}:18 mm × 20 mts • Embalaje 96 rolls,
+            {img}:18 mm × 40 mts • Embalaje 96 rolls,
+            {img}:24 mm × 40 mts • Embalaje 72 rolls,
+            {img}:36 mm × 40 mts • Embalaje 48 rolls,
+            {img}:48 mm × 40 mts • Embalaje 36 rolls">
+                    Cinta de Papel
       </button>
 
-      <!-- Cinta Transparente (5 variantes) -->
       <button class="cat-btn"
         data-cat-id="cinta-transparente"
         data-cat-name="Cinta Transparente"
         data-medida=""
         data-pack=""
-        data-colors="#B3E5FC:12 mm × 25 mts • Embalaje 576 rolls • Pack x12u,
-#B3E5FC:12 mm × 60 mts • Embalaje 144 rolls • Pack x12u,
-#B3E5FC:24 mm × 50 mts • Embalaje 144 rolls • Pack x12u,
-#B3E5FC:48 mm × 40 mts • Embalaje 36 rolls • Pack x6u,
-#B3E5FC:48 mm × 90 mts • Embalaje 36 rolls • Pack x6u">
-        Cinta Transparente
+        data-image="img/cinta-transparente.jpg"
+        data-colors="{img}:12 mm × 25 mts • Embalaje 576 rolls • Pack x12u,
+        {img}:12 mm × 60 mts • Embalaje 144 rolls • Pack x12u,
+        {img}:24 mm × 50 mts • Embalaje 144 rolls • Pack x12u,
+        {img}:48 mm × 40 mts • Embalaje 36 rolls • Pack x6u,
+        {img}:48 mm × 90 mts • Embalaje 36 rolls • Pack x6u">
+                Cinta Transparente
       </button>
 
-      <!-- Papel Fotográfico A4 (2 gramajes) -->
       <button class="cat-btn"
         data-cat-id="papel-fotografico"
         data-cat-name="Papel Fotográfico A4 (21 × 29,7 cm)"
         data-medida="A4 (21 × 29,7 cm)"
         data-pack=""
-        data-colors="#ECEFF1:150 gr • Embalaje 50 bolsas • Pack x20u,
-#ECEFF1:180 gr • Embalaje 50 bolsas • Pack x20u">
-        Papel Fotográfico
+        data-image="img/papel-fotografico.jpeg"
+        data-colors="{img}:150 gr • Embalaje 50 bolsas • Pack x20u,
+        {img}:180 gr • Embalaje 50 bolsas • Pack x20u">
+                Papel Fotográfico
       </button>
 
-      <!-- PVC Autoadhesivo (2 medidas) -->
       <button class="cat-btn"
         data-cat-id="pvc-autoadhesivo"
         data-cat-name="PVC Autoadhesivo"
         data-medida=""
         data-pack=""
-        data-colors="#CFD8DC:45 cm × 2 mts • Embalaje 36 rolls,
-#CFD8DC:45 cm × 10 mts • Embalaje 12 rolls">
+        data-image="img/pvc-auto.png"
+        data-colors="{img}:45 cm × 2 mts • Embalaje 36 rolls,
+        {img}:45 cm × 10 mts • Embalaje 12 rolls">
         PVC Autoadhesivo
       </button>
 
-      <!-- Pliego PVC Cristal 100µ -->
       <button class="cat-btn"
         data-cat-id="pliego-pvc-cristal"
         data-cat-name="Pliego PVC Cristal (100 micrones)"
         data-medida="50x70 cm"
         data-pack="Pack x10u"
-        data-colors="#B0BEC5:Medida 50x70 cm • Embalaje 50 bolsas • Pack x10u">
+        data-image="img/pliego-pvc-cristal.jpg"
+        data-colors="{img}:Medida 50x70 cm • Embalaje 50 bolsas • Pack x10u">
         Pliego PVC Cristal (100 µ)
       </button>
     </div>
 
-    <!-- Panel dinámico de selección -->
+<h3>Selccioná Producto / Color</h3>
+
+    <!-- Panel dinámico -->
     <section id="selectionPanel" class="panel" aria-live="polite">
+      <!-- 👉 ESTE es el div que muestra la imagen de la categoría seleccionada -->
+      <div id="productCard" class="product-card" style="display:none">
+        <div class="product-avatar">
+          <img id="productImg" alt="" />
+        </div>
+      </div>
+
       <h2 id="panelTitle" class="sr-only">Seleccionar color y cantidad</h2>
       <div id="colorsGrid" class="colors"></div>
 
