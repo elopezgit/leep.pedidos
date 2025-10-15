@@ -18,6 +18,7 @@
   <main class="container">
     <h1></h1>
     <h3>Selccioná una Categoría</h3>
+
     <!-- Botonera de categorías -->
     <div id="categoryButtons" class="cat-buttons" role="tablist" aria-label="Categorías">
       <!-- ====== GOMA EVA ====== -->
@@ -43,7 +44,8 @@
         Goma EVA Glitter
       </button>
 
-      <button class="cat-btn"
+      <button class="cat-btn
+        "
         data-cat-id="goma-eva-arcoiris"
         data-cat-name="Goma EVA Arcoíris"
         data-medida="40x60 cm"
@@ -89,7 +91,7 @@
             {img}:24 mm × 40 mts • Embalaje 72 rolls,
             {img}:36 mm × 40 mts • Embalaje 48 rolls,
             {img}:48 mm × 40 mts • Embalaje 36 rolls">
-                    Cinta de Papel
+        Cinta de Papel
       </button>
 
       <button class="cat-btn"
@@ -103,7 +105,7 @@
         {img}:24 mm × 50 mts • Embalaje 144 rolls • Pack x12u,
         {img}:48 mm × 40 mts • Embalaje 36 rolls • Pack x6u,
         {img}:48 mm × 90 mts • Embalaje 36 rolls • Pack x6u">
-                Cinta Transparente
+        Cinta Transparente
       </button>
 
       <button class="cat-btn"
@@ -114,7 +116,7 @@
         data-image="img/papel-fotografico.jpeg"
         data-colors="{img}:150 gr • Embalaje 50 bolsas • Pack x20u,
         {img}:180 gr • Embalaje 50 bolsas • Pack x20u">
-                Papel Fotográfico
+        Papel Fotográfico
       </button>
 
       <button class="cat-btn"
@@ -139,11 +141,11 @@
       </button>
     </div>
 
-<h3>Selccioná Producto / Color</h3>
+    <h3>Selccioná Producto / Color</h3>
 
     <!-- Panel dinámico -->
     <section id="selectionPanel" class="panel" aria-live="polite">
-      <!-- 👉 ESTE es el div que muestra la imagen de la categoría seleccionada -->
+      <!-- Imagen circular de categoría seleccionada -->
       <div id="productCard" class="product-card" style="display:none">
         <div class="product-avatar">
           <img id="productImg" alt="" />
@@ -172,10 +174,15 @@
           <label>Correo<input id="inpEmail" type="email" inputmode="email" placeholder="tu@email.com"></label>
         </div>
         <div class="row">
+          <label>Celular de contacto<input id="inpPhone" type="tel" inputmode="tel" placeholder="+54 9 ..."></label>
+          <label>Provincia<input id="inpProvince" type="text" placeholder="Ej: Tucumán"></label>
+          <label>Localidad<input id="inpCity" type="text" placeholder="Ej: San Miguel de Tucumán"></label>
+        </div>
+        <div class="row">
           <button type="button" id="btnClear" class="btn btn-ghost">Vaciar consulta</button>
           <button type="button" id="btnWhatsApp" class="btn btn-primary">Enviar solicitud por WhatsApp</button>
         </div>
-        <small class="muted">Tu consulta será envida por WhatsApp</small>
+        <small class="muted">Tu consulta será enviada por WhatsApp</small>
       </form>
     </section>
   </main>

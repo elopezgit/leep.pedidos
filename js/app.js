@@ -210,6 +210,9 @@ function rebuildResume(){
   lines.push("Datos del solicitante:");
   lines.push("Nombre y apellido: {completar}");
   lines.push("Correo: {opcional}");
+  lines.push("Celular: {opcional}");
+  lines.push("Provincia: {opcional}");
+  lines.push("Localidad: {opcional}");
 
   const ta = $("#resumeText");
   if (ta) ta.value = lines.join("\n");
@@ -220,11 +223,17 @@ function sendWhatsApp(){
   if (!Object.keys(state.cart).length){ alert("Tu consulta está vacía. Agregá al menos un producto."); return; }
   const name = ($("#inpName").value||"").trim();
   if (!name){ alert("Completá tu nombre y apellido."); return; }
-  const email = ($("#inpEmail").value||"").trim();
+  const email    = ($("#inpEmail").value||"").trim();
+  const phone    = ($("#inpPhone").value||"").trim();
+  const province = ($("#inpProvince").value||"").trim();
+  const city     = ($("#inpCity").value||"").trim();
 
-  const msg = $("#resumeText").value
+  let msg = $("#resumeText").value
     .replace("Nombre y apellido: {completar}", `Nombre y apellido: ${name}`)
-    .replace("Correo: {opcional}", `Correo: ${email || "-"}`);
+    .replace("Correo: {opcional}", `Correo: ${email || "-"}`)
+    .replace("Celular: {opcional}", `Celular: ${phone || "-"}`)
+    .replace("Provincia: {opcional}", `Provincia: ${province || "-"}`)
+    .replace("Localidad: {opcional}", `Localidad: ${city || "-"}`);
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
 }
@@ -235,6 +244,10 @@ function clearAll(){
   const ta = $("#resumeText"); if (ta) ta.value = "";
   $("#inpName").value = "";
   $("#inpEmail").value = "";
+  $("#inpPhone").value = "";
+  $("#inpProvince").value = "";
+  $("#inpCity").value = "";
+
   const hint = $("#hint");
   if (hint) hint.textContent = "Elegí una categoría y luego un color para comenzar.";
   $$("#colorsGrid .color").forEach(n=>n.dataset.selected="false");

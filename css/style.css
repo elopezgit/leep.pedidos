@@ -1,16 +1,13 @@
 /* =======================
    Tema claro LEEP Import
    ======================= */
-
 :root{
   --bg:#f6f8fc; --bg2:#ffffff; --line:#e2e8f0;
   --ink:#233041; --muted:#627084;
   --primary:#00B5E2; --primary-ink:#08252b;
   --accent:#C2185B; --accent-2:#7E57C2;
   --ring:#7E57C2; --radius:14px; --shadow:0 14px 40px rgba(20,42,71,.12);
-
-  /* Tamaño de la imagen circular del detalle (card) */
-  --cat-avatar-size: 140px;
+  --cat-avatar-size: 140px; /* tamaño img circular del detalle */
 }
 
 *{box-sizing:border-box}
@@ -65,65 +62,59 @@ h1,h2{margin:.5rem 0 1rem}
 .cat-btn:hover{transform: translateY(-1px); border-color:#d4deea}
 .cat-btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 
+/* Botón de categoría activo */
+.cat-btn[aria-pressed="true"]{
+  border-color: var(--ring);
+  background: linear-gradient(180deg, #ffffff, #f4f7ff);
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--ring) 28%, transparent),
+    var(--shadow);
+  transform: translateY(0);
+}
+.cat-btn[aria-pressed="true"]::after{
+  content:""; display:block; height:4px; margin-top:.55rem; border-radius:999px;
+  background: linear-gradient(90deg, var(--primary), var(--ring));
+}
+
 /* Panel */
 .panel{
   background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);
   padding:1rem;box-shadow:var(--shadow);overflow:visible
 }
 
-/* ---------- Imagen de categoría (card circular centrada) ---------- */
+/* Imagen de categoría (card circular centrada) */
 .product-card{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:transparent;      /* sin tarjeta sólida para que respire en móvil */
-  border:none;
-  box-shadow:none;
-  padding:0;
-  margin:.25rem 0 1rem;        /* separada de los swatches */
+  display:flex; justify-content:center; align-items:center;
+  background:transparent; border:none; box-shadow:none;
+  padding:0; margin:.25rem 0 1rem;
 }
 .product-avatar{
-  width:var(--cat-avatar-size);
-  height:var(--cat-avatar-size);
-  border-radius:9999px;
-  overflow:hidden;
-  border:4px solid #fff;
+  width:var(--cat-avatar-size); height:var(--cat-avatar-size);
+  border-radius:9999px; overflow:hidden; border:4px solid #fff;
   box-shadow:0 6px 16px rgba(0,0,0,.12);
   background: radial-gradient(80% 80% at 30% 20%, #cfefff, #f2f6ff);
-  margin-inline:auto;          /* centra el círculo */
+  margin-inline:auto;
 }
-#productImg{
-  width:100%; height:100%;
-  object-fit:cover; display:block;
-  border-radius:50%;
-}
+#productImg{ width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
 
 /* Variantes (swatches) */
 .colors{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
-  gap:1rem .9rem;
-  margin-bottom:1rem
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
+  gap:1rem .9rem; margin-bottom:1rem
 }
 .color{
-  display:flex;flex-direction:column;align-items:center;gap:.4rem;
-  background:transparent;border:none;cursor:pointer;padding:0; position:relative;
+  display:flex; flex-direction:column; align-items:center; gap:.4rem;
+  background:transparent; border:none; cursor:pointer; padding:0; position:relative;
 }
-.color:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+.color:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
 .color .dot{
-  width:58px;height:58px;border-radius:999px;
-  background-clip: padding-box;
+  width:58px; height:58px; border-radius:999px; background-clip: padding-box;
   border:2px solid #ffffff;
   box-shadow:0 0 0 2px rgba(0,0,0,.06), inset 0 1px 2px rgba(0,0,0,.08);
   background:#d0d6e0 center/cover no-repeat; /* soporta imagen desde JS */
 }
-.color[data-selected="true"] .dot{
-  outline:3px solid color-mix(in oklab, var(--primary) 70%, white);
-  outline-offset:2px;
-}
-.color span{
-  font-size:.74rem;color:var(--muted);line-height:1.05;pointer-events:none;text-align:center
-}
+.color[data-selected="true"] .dot{ outline:3px solid color-mix(in oklab, var(--primary) 70%, white); outline-offset:2px; }
+.color span{ font-size:.74rem; color:var(--muted); line-height:1.05; pointer-events:none; text-align:center }
 
 /* Badge */
 .qty-badge{
@@ -165,9 +156,9 @@ h1,h2{margin:.5rem 0 1rem}
 /* Footer */
 .footer{padding:1.5rem;text-align:center;color:var(--muted)}
 
-/* Mobile */
+/* Responsive */
 @media (max-width: 560px){
-  :root{ --cat-avatar-size: 108px; }   /* foto más chica en móvil */
+  :root{ --cat-avatar-size: 108px; }
 }
 @media (max-width: 480px){
   .container{padding:1rem}
@@ -177,37 +168,4 @@ h1,h2{margin:.5rem 0 1rem}
   .color span{font-size:.72rem}
   .qty-row{gap:.6rem}
   .btn{padding:.7rem 1rem}
-}
-/* Título y nota del panel */
-.product-heading{
-  text-align:center;
-  font-weight:800;
-  font-size:1.25rem;
-  margin:.25rem 0 .5rem;
-}
-
-.product-note{
-  text-align:center;
-  margin:.5rem 0 1rem;
-}
-
-/* (resto de tu CSS se mantiene igual) */
-/* Botón de categoría activo (seleccionado) */
-.cat-btn[aria-pressed="true"]{
-  border-color: var(--ring);
-  background: linear-gradient(180deg, #ffffff, #f4f7ff);
-  box-shadow:
-    0 0 0 3px color-mix(in oklab, var(--ring) 28%, transparent),
-    var(--shadow);
-  transform: translateY(0); /* neutraliza el pequeño lift del hover */
-}
-
-/* Opcional: una “píldora” inferior como indicador */
-.cat-btn[aria-pressed="true"]::after{
-  content:"";
-  display:block;
-  height:4px;
-  margin-top:.55rem;
-  border-radius:999px;
-  background: linear-gradient(90deg, var(--primary), var(--ring));
 }
